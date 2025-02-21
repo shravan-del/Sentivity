@@ -8,7 +8,6 @@ import pandas as pd
 from xgboost import XGBRegressor
 from sklearn.multioutput import MultiOutputRegressor
 import joblib
-import streamlit as st
 import time
 from flask import Flask, request, jsonify
 import threading
@@ -126,10 +125,10 @@ st.title("📊 7-Day Sentiment Forecast")
 
 app = Flask(__name__)
 
-# Load pre-trained model
+# Load the trained model
 model = joblib.load("multioutput_regressor_model.pkl")
 
-# Set up Reddit API (Replace placeholders with your credentials)
+# Set up Reddit API (Replace with your credentials)
 reddit = praw.Reddit(
     client_id="YOUR_CLIENT_ID",
     client_secret="YOUR_CLIENT_SECRET",
@@ -137,10 +136,10 @@ reddit = praw.Reddit(
 )
 
 def get_reddit_sentiment(subreddit="technology", limit=100):
-    """Fetches Reddit posts and calculates sentiment scores."""
+    """Fetch Reddit posts and calculate sentiment scores."""
     posts = [post.title for post in reddit.subreddit(subreddit).hot(limit=limit)]
     sentiment_scores = np.random.rand(len(posts))  # Replace with actual sentiment analysis
-    return np.mean(sentiment_scores)  # Example: Return average sentiment
+    return np.mean(sentiment_scores)
 
 @app.route("/predict", methods=["GET"])
 def predict():
