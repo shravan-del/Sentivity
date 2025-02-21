@@ -130,7 +130,6 @@ client_id = os.getenv("REDDIT_CLIENT_ID")
 client_secret = os.getenv("REDDIT_CLIENT_SECRET")
 user_agent = os.getenv("REDDIT_USER_AGENT")
 
-# Ensure credentials are properly loaded
 if not all([client_id, client_secret, user_agent]):
     raise ValueError("Missing Reddit API credentials. Ensure environment variables are set.")
 
@@ -154,7 +153,8 @@ def predict():
     return jsonify({"subreddit": subreddit, "sentiment_score": sentiment_score})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))  # Ensure correct port binding for Render
+    app.run(host="0.0.0.0", port=port)
 
 
 if st.button("Run Sentiment Analysis"):
