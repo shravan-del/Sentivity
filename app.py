@@ -3,10 +3,8 @@ import praw
 import numpy as np
 import joblib
 from flask import Flask, request, jsonify
-from flask_cors import CORS 
 
 app = Flask(__name__)
-CORS(app) 
 
 # Load Reddit API credentials from environment variables
 client_id = os.getenv("REDDIT_CLIENT_ID")
