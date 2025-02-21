@@ -125,14 +125,20 @@ st.title("📊 7-Day Sentiment Forecast")
 
 app = Flask(__name__)
 
-# Load the trained model
-model = joblib.load("multioutput_regressor_model.pkl")
+# Load Reddit API credentials from environment variables
+client_id = os.getenv("REDDIT_CLIENT_ID")
+client_secret = os.getenv("REDDIT_CLIENT_SECRET")
+user_agent = os.getenv("REDDIT_USER_AGENT")
 
-# Set up Reddit API (Replace with your credentials)
+# Ensure credentials are properly loaded
+if not all([client_id, client_secret, user_agent]):
+    raise ValueError("Missing Reddit API credentials. Ensure environment variables are set.")
+
+# Set up Reddit API
 reddit = praw.Reddit(
-    client_id="YOUR_CLIENT_ID",
-    client_secret="YOUR_CLIENT_SECRET",
-    user_agent="YOUR_USER_AGENT"
+    client_id=client_id,
+    client_secret=client_secret,
+    user_agent=user_agent
 )
 
 def get_reddit_sentiment(subreddit="technology", limit=100):
