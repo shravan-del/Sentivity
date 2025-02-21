@@ -17,8 +17,7 @@ import json
 
 # Securely get API keys from Streamlit secrets
 API_URL = "https://api-inference.huggingface.co/models/cardiffnlp/xlm-twitter-politics-sentiment"
-API_TOKEN = st.secrets["HF_API_TOKEN"]
-headers = {"Authorization": f"Bearer {API_TOKEN}"}
+API_TOKEN = os.getenv("HF_API_TOKEN")  # Uses environment variables insteadheaders = {"Authorization": f"Bearer {API_TOKEN}"}
 
 # Reddit API authentication
 reddit = praw.Reddit(
