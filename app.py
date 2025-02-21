@@ -21,9 +21,10 @@ API_TOKEN = os.getenv("HF_API_TOKEN")  # Uses environment variables insteadheade
 
 # Reddit API authentication
 reddit = praw.Reddit(
-    client_id=st.secrets["REDDIT_CLIENT_ID"],
-    client_secret=st.secrets["REDDIT_CLIENT_SECRET"],
-    user_agent=st.secrets["REDDIT_USER_AGENT"],
+
+    client_id = os.getenv("REDDIT_CLIENT_ID")
+    client_secret = os.getenv("REDDIT_CLIENT_SECRET")
+    user_agent = os.getenv("REDDIT_USER_AGENT")
     check_for_async=False
 )
 
