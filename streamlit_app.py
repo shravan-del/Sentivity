@@ -25,6 +25,33 @@ def get_sentiment(subreddit):
     except:
         return 0  # Default to 0 if API call fails
 
+# Function to generate forecast plot
+def generate_forecast_plot(pred, output_path='forecast_plot.png'):
+    today = datetime.date.today()
+    days = [today + datetime.timedelta(days=i) for i in range(7)]
+    days_str = [day.strftime('%a %m/%d') for day in days]
+    
+    xnew = np.linspace(0, 6, 300)
+    spline = make_interp_spline(np.arange(7), pred, k=3)
+    pred_smooth = spline(xnew)
+    
+    plt.figure(figsize=(12, 7))
+    plt.fill_between(xnew, pred_smooth, color='#aec7e8', alpha=0.4)
+    plt.plot(xnew, pred_smooth, color='#1f77b4', lw=3, label='Forecast')
+    plt.scatter(np.arange(7), pred, color='#1f77b4', s=100, zorder=5)
+    plt.title("7-Day Sentiment Forecast", fontsize=22, fontweight='bold', pad=20)
+    plt.xlabel("Day", fontsize=16)
+    plt.ylabel("Negative Sentiment", fontsize=16)
+    plt.xticks(np.arange(7), days_str, fontsize=14)
+    plt.yticks(fontsize=14)
+    plt.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
+    plt.legend(fontsize=14)
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+    return output_path
+
+# Run sentiment analysis on button click
 if st.button("Run Sentiment Analysis"):
     with st.spinner("Fetching sentiment scores..."):
         scores = {sub: get_sentiment(sub) for sub in subreddits}
@@ -36,14 +63,11 @@ if st.button("Run Sentiment Analysis"):
     st.write("### Sentiment Scores")
     st.dataframe(df)
     
-    # Plot the data
-    fig, ax = plt.subplots()
-    ax.bar(df["Subreddit"], df["Sentiment Score"], color="blue")
-    ax.set_title("Sentiment Analysis by Subreddit")
-    ax.set_ylabel("Sentiment Score")
-    ax.set_xlabel("Subreddit")
-    st.pyplot(fig)
-    
+    # Generate and display the forecast plot
+    pred = np.random.rand(7)  # Replace with actual sentiment prediction logic
+    plot_path = generate_forecast_plot(pred)
+    st.image(plot_path, caption="7-Day Sentiment Forecast", use_column_width=True)
+
     # Provide Download Button for CSV Export
     st.download_button(
         label="📥 Download Sentiment Data as CSV",
