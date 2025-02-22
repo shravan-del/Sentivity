@@ -50,7 +50,7 @@ def generate_forecast_plot(sentiments):
 
     plt.figure(figsize=(12, 7))
     plt.fill_between(xnew, pred_smooth, color='#aec7e8', alpha=0.4)
-    plt.plot(xnew, pred_smooth, color='#1f77b4', lw=3, label='Forecast")
+    plt.plot(xnew, pred_smooth, color='#1f77b4', lw=3, label="Forecast")
     plt.scatter(np.arange(len(sentiments)), sentiments, color='#1f77b4', s=100, zorder=5)
     plt.title("7-Day Sentiment Forecast", fontsize=22, fontweight='bold', pad=20)
     plt.xlabel("Day", fontsize=16)
