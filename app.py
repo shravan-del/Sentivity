@@ -39,13 +39,18 @@ def get_reddit_sentiment(subreddit="technology", limit=100):
 
 # Function to generate the sentiment graph
 def generate_forecast_plot(sentiments):
+    if not sentiments or len(sentiments) < 2:  # Ensure enough data
+        sentiments = [0, 0, 0, 0]  # Default safe values
+
     today = datetime.date.today()
     days = [today - datetime.timedelta(days=i) for i in range(len(sentiments))]
-    days_str = [day.strftime('%a %m/%d') for day in days][::-1]  # Reverse for chronological order
+    days_str = [day.strftime('%a %m/%d') for day in days][::-1]  # Reverse order
 
-    # Smooth the curve using spline interpolation
+    # Adjust k (degree of spline) based on data length
+    k = min(3, len(sentiments) - 1)  # If too few points, lower k
+
     xnew = np.linspace(0, len(sentiments) - 1, 300)
-    spline = make_interp_spline(np.arange(len(sentiments)), sentiments, k=3)
+    spline = make_interp_spline(np.arange(len(sentiments)), sentiments, k=k)
     pred_smooth = spline(xnew)
 
     plt.figure(figsize=(12, 7))
@@ -60,9 +65,8 @@ def generate_forecast_plot(sentiments):
     plt.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
     plt.legend(fontsize=14)
     plt.tight_layout()
-    plt.savefig(GRAPH_FILE)
+    plt.savefig(GRAPH_FILE)  # Save to absolute path
     plt.close()
-
 # Function to update sentiment data and generate graph
 def update_sentiment_data():
     today = str(datetime.date.today())
