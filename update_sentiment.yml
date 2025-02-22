@@ -1,0 +1,13 @@
+name: Update Sentiment Data Daily
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs every day at midnight UTC
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call API to update sentiment data
+        run: |
+          curl -X GET "https://sentivity.onrender.com/update"
